@@ -17,18 +17,51 @@
 const socket = new WebSocket("wss://stream.binance.com:9443/stream?streams=btctry@trade/btcusdc@trade");
 var btcPriceElementTry = document.getElementById("btc-price-try");
 var btcPriceElementUsdt = document.getElementById("btc-price-usd");
+var lastPriceTry = null;
+var lastPriceUsdt = null;
 socket.addEventListener('message', function (event) {
 	var jsonEvent = JSON.parse(event.data);
 	// console.log('Message from server ', jsonEvent);
 	if(jsonEvent.stream == "btctry@trade") {
 		var jsonDataTry = jsonEvent.data;
+		var btcPriceTryRaw = Math.round(jsonDataTry.p);
 		var btcPriceTry = " ₺ " + Math.round(jsonDataTry.p);
-		btcPriceElementTry.innerText = btcPriceTry;
+		if(lastPriceTry > btcPriceTryRaw) {
+			btcPriceElementTry.innerText = btcPriceTry;
+			btcPriceElementTry.style.color = "red";
+			lastPriceTry = btcPriceTryRaw;
+		}
+		else if(btcPriceTryRaw > lastPriceTry) {
+			btcPriceElementTry.innerText = btcPriceTry;
+			btcPriceElementTry.style.color = "green";
+			lastPriceTry = btcPriceTryRaw;
+		}
+		else {
+			btcPriceElementTry.innerText = btcPriceTry;
+			btcPriceElementTry.style.color = "black";
+			lastPriceTry = btcPriceTryRaw;
+		}
+		
 	}
 	else if(jsonEvent.stream == "btcusdc@trade") {
 		var jsonDataUsdt = jsonEvent.data;
+		var btcPriceUsdtRaw = Math.round(jsonDataUsdt.p);
 		var btcPriceUsdt = " $ " + Math.round(jsonDataUsdt.p);
-		btcPriceElementUsdt.innerText = btcPriceUsdt;
+		if(lastPriceUsdt > btcPriceUsdtRaw) {
+			btcPriceElementUsdt.innerText = btcPriceUsdt;
+			btcPriceElementUsdt.style.color = "red";
+			lastPriceUsdt = btcPriceUsdtRaw;
+		}
+		else if(btcPriceUsdtRaw > lastPriceUsdt) {
+			btcPriceElementUsdt.innerText = btcPriceUsdt;
+			btcPriceElementUsdt.style.color = "green";
+			lastPriceUsdt = btcPriceUsdtRaw;
+		}
+		else {
+			btcPriceElementUsdt.innerText = btcPriceUsdt;
+			btcPriceElementUsdt.style.color = "black";
+			lastPriceUsdt = btcPriceUsdtRaw;
+		}
 	}
 });
 // these lines below are for sending data to server via websocket
@@ -48,5 +81,5 @@ socket.addEventListener('message', function (event) {
 // since I can't use document.getElementById in ejs file.
 // I am sure there is another way to do it but I couldn't find since then
 </script>
-<iframe width="125px" height="150px" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/322727719&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/soulker" title="Soulker" target="_blank" style="color: #cccccc; text-decoration: none;">Soulker</a> · <a href="" title="24 小時 [Prod. Soulker]" target="_blank" style="color: #cccccc; text-decoration: none;">24 小時 [Prod. Soulker]</a></div>
+<iframe width="125" height="150" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/322727719&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/soulker" title="Soulker" target="_blank" style="color: #cccccc; text-decoration: none;">Soulker</a> · <a href="https://soundcloud.com/soulker/24h-prod-soulker" title="24 小時 [Prod. Soulker]" target="_blank" style="color: #cccccc; text-decoration: none;">24 小時 [Prod. Soulker]</a></div>
 <%- include("partials/footer.ejs") %>
