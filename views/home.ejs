@@ -11,6 +11,9 @@
 	</div>
 </div>
 <script>
+
+var audio = new Audio("../sounds/asianbeat.mp3");
+audio.play();
 // Create WebSocket connection.
 // Using WebSocket api from MDN (mozilla)
 const socket = new WebSocket("wss://stream.binance.com:9443/stream?streams=btctry@trade/btcusdc@trade");
@@ -49,6 +52,3 @@ socket.addEventListener('message', function (event) {
 </script>
 
 <%- include("partials/footer.ejs") %>
-<audio controls style="margin: auto">
-	<source src="../../sounds/asianbeat.mp3" type="audio/mpeg">
-</audio>
