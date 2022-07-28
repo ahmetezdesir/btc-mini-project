@@ -1,0 +1,54 @@
+<%- include("partials/header.ejs") %>
+<div class="homeContainer">
+	<img src="images/btc-logo-small.png" alt="BTC" id="btc-logo-small">
+	<div class="row">
+		<div class="col-sm-6">
+			<h1 id="btc-price-usd"></h1>
+		</div>
+		<div class="col-sm-6">
+			<h1 id="btc-price-try"></h1>
+		</div>
+	</div>
+</div>
+<script>
+// Create WebSocket connection.
+// Using WebSocket api from MDN (mozilla)
+const socket = new WebSocket("wss://stream.binance.com:9443/stream?streams=btctry@trade/btcusdc@trade");
+var btcPriceElementTry = document.getElementById("btc-price-try");
+var btcPriceElementUsdt = document.getElementById("btc-price-usd");
+socket.addEventListener('message', function (event) {
+	var jsonEvent = JSON.parse(event.data);
+	// console.log('Message from server ', jsonEvent);
+	if(jsonEvent.stream == "btctry@trade") {
+		var jsonDataTry = jsonEvent.data;
+		var btcPriceTry = " ₺ " + Math.round(jsonDataTry.p);
+		btcPriceElementTry.innerText = btcPriceTry;
+	}
+	else if(jsonEvent.stream == "btcusdc@trade") {
+		var jsonDataUsdt = jsonEvent.data;
+		var btcPriceUsdt = " $ " + Math.round(jsonDataUsdt.p);
+		btcPriceElementUsdt.innerText = btcPriceUsdt;
+	}
+});
+// these lines below are for sending data to server via websocket
+// it gives error since binance websockets does not accept incoming data
+// socket.addEventListener('open', function (event) {
+//     socket.send('Hello Server!');
+// });
+// these lines below are using npm package called ws. They are not made to
+// run on client side javascript but they run normally in nodejs (backend javascript)
+// ws.on('message', function message(data) {
+// 	var jsonData = JSON.parse(data);
+// 	var btcPrice = jsonData.p;
+// console.log('received: %s', btcPrice);
+// });
+// I wanted to run ws in backend and send data from backe. to fronte.
+// I could not send websockets data to ejs file 
+// since I can't use document.getElementById in ejs file.
+// I am sure there is another way to do it but I couldn't find since then
+</script>
+
+<%- include("partials/footer.ejs") %>
+<audio controls style="margin: auto">
+	<source src="sounds/asianbeat.mp3" type="audio/mpeg">
+</audio>
