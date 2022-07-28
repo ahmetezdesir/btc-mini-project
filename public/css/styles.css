@@ -138,3 +138,11 @@ hr {
 #navbar-brand {
     color: #4D4D4D;
 }
+
+iframe {
+    display: flex;
+    /* flex-direction: column; */
+    /* text-align: center; */
+    /* justify-content: center; */
+    margin: 0 auto;
+}
